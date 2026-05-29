@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-// Emit hook para ipasa ang event sa App.vue kapag matagumpay ang login
 const emit = defineEmits(['login-success'])
 
-// State Management para sa Form Inputs at Feedback Loops
 const emailOrUser = ref('')
 const password = ref('')
 const isLoading = ref(false)
@@ -12,20 +10,17 @@ const errorMsg = ref('')
 const showPassword = ref(false)
 
 const handleLoginSubmit = () => {
-  // Simpleng validation check bago magpatuloy
   if (!emailOrUser.value.trim() || !password.value.trim()) {
-    errorMsg.value = 'Mangyaring punan ang parehong fields.'
+    errorMsg.value = 'Enter Username and Password.'
     return
   }
 
   errorMsg.value = ''
   isLoading.value = true
 
-  // Kunwariang API Server Request Timeout (800ms) para magkaroon ng premium loading animation
   setTimeout(() => {
     isLoading.value = false
     
-    // Dito pwedeng maglagay ng totoong authentication. Para sa demo, papasukin natin:
     emit('login-success', {
       user: emailOrUser.value,
       role: 'authenticated'
@@ -141,14 +136,11 @@ const handleLoginSubmit = () => {
 </template>
 
 <style scoped>
-/* ==========================================================================
-   1. CORE WRAPPER AND GRID HOUSING ARCHITECTURE (BLACK & DEEP EMERALD)
-   ========================================================================== */
 .web-knowledge-auth-screen {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #000000; /* Pure Black Core */
+  background-color: #000000; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,9 +149,6 @@ const handleLoginSubmit = () => {
   padding: 20px;
 }
 
-/* ==========================================================================
-   2. CUSTOM CSS SPIDER WEB GRAPHICS LAYERING
-   ========================================================================== */
 .spider-web-matrix-overlay {
   position: absolute;
   top: 0;
@@ -171,29 +160,28 @@ const handleLoginSubmit = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.22; /* Subtle structural appearance */
+  opacity: 0.22; 
 }
 
 .web-svg {
   width: 110vmax;
   height: 110vmax;
   transform: rotate(15deg);
-  animation: web-pulsate-glow 8s ease-in-out infinite alternate;
+  animation: web-pulsate-glow 0s
 }
 
 .web-strand {
-  stroke: #046307; /* Deep Emerald Green line threads */
+  stroke: #046307; 
   stroke-width: 1.5;
 }
 
 .web-ring {
   fill: none;
-  stroke: #059669; /* Vibrant Emerald Accent */
+  stroke: #059669; 
   stroke-width: 1.2;
-  stroke-dasharray: 4, 4; /* Digital micro-grid aesthetic */
+  stroke-dasharray: 4, 4; 
 }
 
-/* Ambient Background Lights */
 .emerald-ambient-glow {
   position: absolute;
   width: 500px;
@@ -208,16 +196,13 @@ const handleLoginSubmit = () => {
 .position-top { top: -200px; right: -100px; }
 .position-bottom { bottom: -200px; left: -100px; }
 
-/* ==========================================================================
-   3. AUTHENTICATION CARD STRUCTURAL LAYOUT
-   ========================================================================== */
 .auth-card-wrapper {
   position: relative;
   z-index: 10;
   width: 100%;
   max-width: 460px;
   background: linear-gradient(135deg, rgba(10, 10, 10, 0.85) 0%, rgba(2, 44, 34, 0.6) 100%);
-  border: 1px solid rgba(16, 185, 129, 0.2); /* Soft Glowing Emerald Border */
+  border: 1px solid rgba(16, 185, 129, 0.2); 
   border-radius: 20px;
   padding: 45px 40px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
@@ -226,7 +211,6 @@ const handleLoginSubmit = () => {
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* Brand Styling Elements */
 .brand-identity-block {
   text-align: center;
   margin-bottom: 35px;
@@ -248,7 +232,7 @@ const handleLoginSubmit = () => {
 
 .core-node {
   font-size: 2rem;
-  transform: rotate(-45deg); /* Re-align inside rotated wrapper */
+  transform: rotate(-45deg);
 }
 
 .brand-title {
@@ -263,16 +247,13 @@ const handleLoginSubmit = () => {
 }
 
 .brand-tagline {
-  color: #a7f3d0; /* Muted Emerald Mint */
+  color: #a7f3d0;
   font-size: 0.95rem;
   margin: 0;
   opacity: 0.8;
   font-weight: 500;
 }
 
-/* ==========================================================================
-   4. FORM FIELDS AND INTERACTIVE UI COMPONENTS
-   ========================================================================== */
 .form-container {
   display: flex;
   flex-direction: column;
@@ -317,7 +298,7 @@ const handleLoginSubmit = () => {
   width: 100%;
   padding: 15px 16px 15px 48px;
   background-color: rgba(0, 0, 0, 0.6);
-  border: 2px solid rgba(4, 99, 7, 0.4); /* Deep Emerald Border */
+  border: 2px solid rgba(4, 99, 7, 0.4); 
   border-radius: 12px;
   font-size: 1rem;
   color: #ffffff;
@@ -325,14 +306,12 @@ const handleLoginSubmit = () => {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Input Focus States */
 .input-input-wrapper input:focus {
-  border-color: #10b981; /* Shift up to active neon emerald */
+  border-color: #10b981; 
   background-color: rgba(2, 44, 34, 0.3);
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
 }
 
-/* Password Toggle Configs */
 .password-visibility-toggler {
   position: absolute;
   right: 14px;
@@ -363,13 +342,10 @@ const handleLoginSubmit = () => {
   text-decoration: underline;
 }
 
-/* ==========================================================================
-   5. DEEP EMERALD HIGH-TRANSITION ACTION TRIGGERS
-   ========================================================================== */
 .auth-action-trigger {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(180deg, #047857 0%, #064e3b 100%); /* Deep Emerald Core Gradient */
+  background: linear-gradient(180deg, #047857 0%, #064e3b 100%);
   border: 1px solid #10b981;
   border-radius: 12px;
   color: #ffffff;
@@ -396,7 +372,6 @@ const handleLoginSubmit = () => {
   cursor: not-allowed;
 }
 
-/* Form Action Loading Ring Sync State */
 .loading-spinner-ring {
   display: flex;
   align-items: center;
@@ -413,9 +388,6 @@ const handleLoginSubmit = () => {
   animation: spinner-spin-rotation 0.8s linear infinite;
 }
 
-/* ==========================================================================
-   6. ERROR STATE BANNER MESSAGES
-   ========================================================================== */
 .error-notice-banner {
   background-color: rgba(220, 38, 38, 0.15);
   border: 1px solid rgba(220, 38, 38, 0.4);
@@ -439,7 +411,6 @@ const handleLoginSubmit = () => {
   line-height: 1.4;
 }
 
-/* Footer elements */
 .auth-card-footer {
   text-align: center;
   margin-top: 30px;
@@ -450,7 +421,6 @@ const handleLoginSubmit = () => {
 }
 .auth-card-footer p { margin: 0; }
 
-/* Status Bar Text Information Display */
 .terminal-status-metric {
   position: absolute;
   bottom: 20px;
@@ -473,9 +443,6 @@ const handleLoginSubmit = () => {
   animation: system-dot-blink 1s steps(2, start) infinite;
 }
 
-/* ==========================================================================
-   7. SYSTEM KEYFRAME ANIMATION MODULES
-   ========================================================================== */
 @keyframes web-pulsate-glow {
   0% { transform: rotate(15deg) scale(1); opacity: 0.18; }
   100% { transform: rotate(17deg) scale(1.03); opacity: 0.26; }
