@@ -1,56 +1,48 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Login from './Components/Login.vue'
+import Dashboard from './Components/Dashboard.vue'
 
 const isLoggedIn = ref(false)
-const userRole = ref('') 
 const loggedInUser = ref('')
 
-const handleLoginSuccess = (payload: { user: string, role: string }) => {
+const handleLoginSuccess = (payload: { user: string; role: string }) => {
   loggedInUser.value = payload.user
-  if (payload.user.toLowerCase().includes('prof') || payload.user.toLowerCase().includes('teacher')) {
-    userRole.value = 'professor'
-  } else {
-    userRole.value = 'student'
-  }
-  
   isLoggedIn.value = true
 }
 
 const handleLogout = () => {
   isLoggedIn.value = false
-  userRole.value = ''
   loggedInUser.value = ''
 }
 </script>
 
 <template>
   <Login v-if="!isLoggedIn" @login-success="handleLoginSuccess" />
-  
-  <StudentDashboard v-else-if="userRole === 'student'" @logout="handleLogout" />
-  
-  <ProfessorDashboard v-else-if="userRole === 'professor'" @logout="handleLogout" />
+  <Dashboard v-else :username="loggedInUser" @logout="handleLogout" />
 </template>
 
 <style>
-  #app {
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    text-align: left !important;
-    width: 100vw;
-    height: 100vh;
-  }
+#app {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  width: 100vw;
+  height: 100vh;
+}
 
-  * { box-sizing: border-box; }
-  
-  body, html { 
-    margin: 0; 
-    padding: 0; 
-    background: #000000;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-  }
+* {
+  box-sizing: border-box;
+}
+
+body, html { 
+  margin: 0; 
+  padding: 0; 
+  background: #000000;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 </style>
