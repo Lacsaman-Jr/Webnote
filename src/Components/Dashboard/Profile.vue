@@ -14,10 +14,10 @@ const birthdate = ref('2002-10-24')
 const address = ref('Sector 7, Quantum Grid Core Node, PH')
 
 const socialLinks = ref([
-  { id: 1, platform: 'GitHub', url: 'https://github.com', icon: '💻' },
-  { id: 2, platform: 'ResearchGate', url: 'https://researchgate.net', icon: '🔬' },
-  { id: 3, platform: 'LinkedIn', url: 'https://linkedin.com', icon: '👔' },
-  { id: 4, platform: 'Twitter / X', url: 'https://x.com', icon: '🌐' }
+  { id: 1, platform: 'GitHub', url: 'https://github.com/Lacsaman-Jr?tab=overview&from=2026-05-01&to=2026-05-30', icon: '💻' },
+  { id: 2, platform: 'LinkedIn', url: 'https://ph.linkedin.com/in/abdullah-abuat-lacsaman-jr-5555a0336/tl', icon: '👔' },
+  { id: 3, platform: 'Instagram', url: 'https://www.instagram.com/lacsaman_jr?igsh=MWE1eWF3MGt1M2Rjbg%3D%3D', icon: '👤' },
+  { id: 4, platform: 'Facebook', url: 'https://www.facebook.com/abdullahabuatlacsamanjr', icon: '🌐' }
 ])
 
 const showAcademicMenu = ref(false)
