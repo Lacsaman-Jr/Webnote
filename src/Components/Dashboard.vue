@@ -14,230 +14,191 @@ const emit = defineEmits(['logout'])
 
 const currentTab = ref('home')
 const searchQuery = ref('')
+const isSidebarOpen = ref(true)
 
 const navItems = [
-  { id: 'home', label: 'Home Node', icon: '🏠' },
-  { id: 'profile', label: 'Profile Dossier', icon: '👤' },
-  { id: 'newsfeed', label: 'Social Feed Stream', icon: '📰' },
-  { id: 'messages', label: 'Secure Messages', icon: '💬' },
-  { id: 'lectures', label: 'Lectures Vault', icon: '📚' },
-  { id: 'history', label: 'History Graph', icon: '🐙' },
-  { id: 'settings', label: 'System Settings', icon: '⚙️' },
-  { id: 'about', label: 'About System', icon: 'ℹ️' },
+  { id: 'home', label: 'Home', icon: '🏠' },
+  { id: 'profile', label: 'Profile', icon: '👤' },
+  { id: 'newsfeed', label: 'News feed', icon: '📰' },
+  { id: 'messages', label: 'Messages', icon: '💬' },
+  { id: 'lectures', label: 'Lectures', icon: '📚' },
+  { id: 'history', label: 'History', icon: '🐙' },
+  { id: 'settings', label: 'Settings', icon: '⚙️' },
+  { id: 'about', label: 'About', icon: 'ℹ️' },
 ]
 
 const handleSearchSubmit = () => {
   if (searchQuery.value.trim()) {
-    alert(`Searching workspace index & user vectors for: "${searchQuery.value}"`)
-    searchQuery.value = ''
+    alert(`Searching workspace index for: ${searchQuery.value}`)
   }
 }
 </script>
 
 <template>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      
-      <div class="search-module">
-        <form @submit.prevent="handleSearchSubmit" class="search-wrapper">
-          <span class="search-icon">🔍</span>
-          <input 
-            type="text" 
-            v-model="searchQuery" 
-            placeholder="Search users or nodes..." 
-            autocomplete="off"
-          />
-        </form>
-      </div>
-
+  <div class="dashboard-layout">
+    
+    <aside class="sidebar" :class="{ 'is-closed': !isSidebarOpen }">
       <div class="sidebar-header">
-        <div class="logo-hex"><span class="logo-icon">🕸️</span></div>
-        <div class="user-meta">
-          <h3>{{ username || 'Agent_Core' }}</h3>
-          <span class="status-indicator">Online Vector</span>
-        </div>
+        <div class="logo-icon">💠</div>
+        <h2 class="sidebar-title" v-show="isSidebarOpen">Knowledge Web</h2>
       </div>
 
       <nav class="sidebar-nav">
         <button 
           v-for="item in navItems" 
           :key="item.id"
-          :class="['nav-link', { active: currentTab === item.id }]"
+          :class="['nav-btn', { active: currentTab === item.id }]"
           @click="currentTab = item.id"
+          :title="!isSidebarOpen ? item.label : ''"
         >
           <span class="nav-icon">{{ item.icon }}</span>
-          <span class="nav-label">{{ item.label }}</span>
+          <span class="nav-label" v-show="isSidebarOpen">{{ item.label }}</span>
         </button>
       </nav>
 
       <div class="sidebar-footer">
-        <button class="logout-btn" @click="emit('logout')">
-          <span class="nav-icon">🚪</span> Terminate Session
+        <button class="logout-btn" @click="emit('logout')" :title="!isSidebarOpen ? 'Disconnect' : ''">
+          <span class="logout-icon">🚪</span>
+          <span v-show="isSidebarOpen">Logout</span>
         </button>
       </div>
     </aside>
 
-    <main class="workspace-viewport">
-      <div class="workspace-scroll-container">
-        <Home v-if="currentTab === 'home'" :username="username" />
-        <Profile v-else-if="currentTab === 'profile'" :username="username" />
-        <NewsFeed v-else-if="currentTab === 'newsfeed'" />
-        <Messages v-else-if="currentTab === 'messages'" />
-        <Lectures v-else-if="currentTab === 'lectures'" />
-        <History v-else-if="currentTab === 'history'" />
-        <Settings v-else-if="currentTab === 'settings'" />
-        <About v-else-if="currentTab === 'about'" />
+    <main class="workspace-main">
+      
+      <header class="workspace-header">
+        <button class="toggle-sidebar-btn" @click="isSidebarOpen = !isSidebarOpen">
+          <span class="toggle-icon">{{ isSidebarOpen ? '◀' : '▶' }}</span>
+          <span class="toggle-text">{{ isSidebarOpen ? 'Hide Menu' : 'Show Menu' }}</span>
+        </button>
+
+        <div class="search-container">
+          <input 
+            type="text" 
+            v-model="searchQuery" 
+            @keyup.enter="handleSearchSubmit"
+            placeholder="Search workspace index..." 
+            class="global-search"
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="user-badge">
+          <span class="user-name">{{ username }}</span>
+          <div class="user-avatar">👤</div>
+        </div>
+      </header>
+
+      <div class="workspace-viewport">
+        <div class="workspace-scroll-container">
+          <Home v-if="currentTab === 'home'" :username="username" />
+          <Profile v-if="currentTab === 'profile'" :username="username" />
+          <NewsFeed v-if="currentTab === 'newsfeed'" :username="username" />
+          <Messages v-if="currentTab === 'messages'" :username="username" />
+          <Lectures v-if="currentTab === 'lectures'" :username="username" />
+          <History v-if="currentTab === 'history'" :username="username" />
+          <Settings v-if="currentTab === 'settings'" :username="username" />
+          <About v-if="currentTab === 'about'" :username="username" />
+        </div>
       </div>
+      
     </main>
   </div>
 </template>
 
 <style scoped>
-.dashboard-container {
+.dashboard-layout {
   display: flex;
-  width: 100vw;
   height: 100vh;
-  background-color: #000000;
-  color: #ffffff;
+  width: 100vw;
+  background: #020205;
+  color: #e2e8f0;
   overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .sidebar {
-  width: 25vw;
-  min-width: 280px;
-  max-width: 350px;
-  height: 100%;
-  background: linear-gradient(180deg, #050505 0%, #021410 100%);
-  border-right: 1px solid rgba(16, 185, 129, 0.15);
+  width: 260px;
+  background: rgba(4, 12, 20, 0.95);
+  border-right: 1px solid rgba(16, 185, 129, 0.2);
   display: flex;
   flex-direction: column;
-  padding: 20px 16px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 30;
 }
-
-.search-module {
-  margin-bottom: 20px;
-}
-
-.search-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  font-size: 0.9rem;
-  opacity: 0.6;
-}
-
-.search-wrapper input {
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 8px;
-  padding: 10px 12px 10px 36px;
-  font-size: 0.9rem;
-  color: #ffffff;
-  outline: none;
-  transition: all 0.25s ease;
-}
-
-.search-wrapper input:focus {
-  border-color: #10b981;
-  background-color: rgba(2, 44, 34, 0.2);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+.sidebar.is-closed {
+  width: 70px;
 }
 
 .sidebar-header {
+  height: 70px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-bottom: 16px;
+  padding: 0 20px;
   border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+  gap: 12px;
 }
-
-.logo-hex {
-  width: 38px;
-  height: 38px;
-  background: #022c22;
-  border: 1px solid #10b981;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
-}
-
-.logo-icon { font-size: 1.1rem; }
-
-.user-meta h3 {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #ffffff;
-  letter-spacing: -0.3px;
-}
-
-.status-indicator {
-  font-size: 0.7rem;
+.logo-icon {
+  font-size: 1.5rem;
   color: #10b981;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
 }
-
-.status-indicator::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background-color: #10b981;
-  border-radius: 50%;
-  box-shadow: 0 0 8px #10b981;
+.sidebar-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .sidebar-nav {
   flex: 1;
+  padding: 20px 10px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 16px;
-  overflow-y: auto;
+  gap: 8px;
 }
 
-.nav-link {
+.nav-btn {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 14px;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 8px;
   color: #94a3b8;
-  font-size: 0.9rem;
-  font-weight: 600;
+  padding: 12px 14px;
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
-
-.nav-link:hover {
-  background: rgba(16, 185, 129, 0.04);
-  color: #34d399;
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
 }
-
-.nav-link.active {
-  background: rgba(4, 120, 87, 0.15);
-  border-color: rgba(16, 185, 129, 0.25);
+.nav-btn.active {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
   color: #10b981;
+  font-weight: 600;
+}
+.sidebar.is-closed .nav-btn {
+  justify-content: center;
+  padding: 12px 0;
+}
+.nav-icon {
+  font-size: 1.2rem;
+}
+.nav-label {
+  font-size: 0.9rem;
 }
 
 .sidebar-footer {
-  padding-top: 14px;
+  padding: 20px 10px;
   border-top: 1px solid rgba(16, 185, 129, 0.1);
 }
-
 .logout-btn {
   width: 100%;
   display: flex;
@@ -252,59 +213,132 @@ const handleSearchSubmit = () => {
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
-
+.sidebar.is-closed .logout-btn {
+  justify-content: center;
+  padding: 10px 0;
+}
 .logout-btn:hover {
   background: rgba(220, 38, 38, 0.12);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.workspace-viewport {
+.workspace-main {
   flex: 1;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   position: relative;
   background: radial-gradient(circle at 80% 20%, rgba(2, 44, 34, 0.2) 0%, rgba(0, 0, 0, 0) 65%);
+}
+
+.workspace-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 35px;
+  background: rgba(2, 6, 12, 0.8);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+  gap: 20px;
+}
+
+.toggle-sidebar-btn {
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.toggle-sidebar-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.search-container {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+}
+.global-search {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  padding: 10px 16px 10px 38px;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+.global-search:focus {
+  border-color: #10b981;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.1);
+}
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.workspace-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden; 
 }
 
 .workspace-scroll-container {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 35px;
+  box-sizing: border-box;
 }
 
 :deep(.view-container) {
-  max-width: 950px;
+  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
-  animation: view-entry 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-:deep(.view-title) {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin: 0 0 6px 0;
-  background: linear-gradient(180deg, #ffffff 40%, #10b981 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-:deep(.view-tagline) {
-  color: #64748b;
-  margin: 0 0 28px 0;
-  font-size: 0.9rem;
-}
-
-:deep(.panel-card) {
-  background: rgba(8, 8, 8, 0.65);
-  border: 1px solid rgba(16, 185, 129, 0.14);
-  border-radius: 12px;
-  padding: 22px;
-  backdrop-filter: blur(12px);
-  margin-bottom: 20px;
-}
-
-@keyframes view-entry {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 </style>
